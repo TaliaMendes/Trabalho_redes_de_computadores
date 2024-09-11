@@ -2,7 +2,6 @@ import socket
 import threading
 import http.client
 import json
-import random
 
 HOST = '127.0.0.1' 
 PORT = 20000
@@ -69,7 +68,7 @@ def interagindo_cliente(client_socket):
                     resposta = gerar_resposta_ia(pergunta)
                     print(f"Resposta gerada pela IA: {resposta}")
                 else: 
-                    escolha = random.choice(['ia', 'humano'])
+                    escolha = input("Quem irá responder a proxima pergunta: 'ia' ou 'humano'")
                     origem_resposta = escolha
 
                     if origem_resposta == 'ia':
@@ -82,6 +81,9 @@ def interagindo_cliente(client_socket):
 
                 print(f"Enviando resposta para o cliente: {resposta} (Origem: {origem_resposta})")
                 client_socket.send(f"{resposta}|{origem_resposta}".encode('utf-8'))
+
+                acertou = False 
+                salvar_historico(nome_usuario, pergunta, resposta, origem_resposta, acertou)
 
             except Exception as e:
                 print(f"Erro durante o processamento da pergunta: {e}")
@@ -108,7 +110,7 @@ def gerar_resposta_ia(pergunta):
         })
 
         headers = {
-            'x-rapidapi-key': "f901e15523msh5061a69d622dfa1p1c9355jsn8611b192bc15",
+            'x-rapidapi-key': "7e7a22e58fmsh1f2c7eb99a94696p160deajsnd29e933bcd82",#"f901e15523msh5061a69d622dfa1p1c9355jsn8611b192bc15",chave ivyna #
             'x-rapidapi-host': "chatgpt-42.p.rapidapi.com",
             'Content-Type': "application/json"
         }
