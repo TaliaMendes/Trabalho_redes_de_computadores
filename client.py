@@ -1,7 +1,7 @@
 import socket
 
 HOST = '127.0.0.1' 
-PORT = 20000
+PORT = 30000
 
 def iniciar_cliente():
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -47,6 +47,9 @@ def iniciar_cliente():
             print("\n------ Quantidade de erros e acertos de Palpites ---------")
             print(f"Total de acertos: {acertos}")
             print(f"Total de erros: {erros}")
+
+            # Enviar o feedback para o servidor (Acertou ou Errou)
+            client_socket.send(acertou.encode('utf-8'))
 
         except Exception as e:
             print(f"Erro ao receber resposta do servidor: {e}")

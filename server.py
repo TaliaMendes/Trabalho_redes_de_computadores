@@ -4,7 +4,7 @@ import http.client
 import json
 
 HOST = '127.0.0.1' 
-PORT = 20000
+PORT = 30000
 MODE = None
 DELAY = None
 HISTORICO = []
@@ -68,7 +68,7 @@ def interagindo_cliente(client_socket):
                     resposta = gerar_resposta_ia(pergunta)
                     print(f"Resposta gerada pela IA: {resposta}")
                 else: 
-                    escolha = input("Quem irá responder a proxima pergunta: 'ia' ou 'humano'")
+                    escolha = input("Quem ira responder 'ia' ou 'humano':")
                     origem_resposta = escolha
 
                     if origem_resposta == 'ia':
@@ -82,7 +82,11 @@ def interagindo_cliente(client_socket):
                 print(f"Enviando resposta para o cliente: {resposta} (Origem: {origem_resposta})")
                 client_socket.send(f"{resposta}|{origem_resposta}".encode('utf-8'))
 
-                acertou = False 
+                # Recebe feedback do cliente (acertou-true ou errou-false)
+                acertou_feedback = client_socket.recv(1024).decode('utf-8').strip()
+                acertou = acertou_feedback == "Acertou"
+                print(f"O cliente {nome_usuario} {'acertou' if acertou else 'errou'} ao adivinhar.")
+
                 salvar_historico(nome_usuario, pergunta, resposta, origem_resposta, acertou)
 
             except Exception as e:
@@ -110,7 +114,7 @@ def gerar_resposta_ia(pergunta):
         })
 
         headers = {
-            'x-rapidapi-key': "7e7a22e58fmsh1f2c7eb99a94696p160deajsnd29e933bcd82",#"f901e15523msh5061a69d622dfa1p1c9355jsn8611b192bc15",chave ivyna #
+            'x-rapidapi-key': "44b8ef044cmsh82a17418f4223e4p15ce05jsn01c3d1a5894b", 
             'x-rapidapi-host': "chatgpt-42.p.rapidapi.com",
             'Content-Type': "application/json"
         }
@@ -120,7 +124,7 @@ def gerar_resposta_ia(pergunta):
         data = res.read()
 
         
-        print(f"Resposta bruta da API: {data.decode('utf-8')}")
+        #print(f"Resposta bruta da API: {data.decode('utf-8')}")
 
         try:
             response_json = json.loads(data.decode("utf-8"))
